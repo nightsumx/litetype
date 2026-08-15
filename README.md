@@ -3,6 +3,8 @@
 [![npm](https://img.shields.io/npm/v/litetype)](https://www.npmjs.com/package/litetype)
 [![CI](https://github.com/nightsumx/litetype/actions/workflows/ci.yml/badge.svg)](https://github.com/nightsumx/litetype/actions/workflows/ci.yml)
 
+**Runtime schemas that look like TypeScript and compose like JavaScript.**
+
 **A literal is a schema.** Zod adds three layers of noise: `z.`, `.object()`, `.optional()`. Here the schema is lazy bare data and the verbs are free functions. Write it like an interface. Compose it like JS.
 
 ```ts
