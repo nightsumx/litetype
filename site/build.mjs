@@ -1,23 +1,40 @@
 import { cp, mkdir, rm, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { createHighlighter } from 'shiki'
 
 const root = dirname(fileURLToPath(import.meta.url))
 const out = join(root, 'dist')
+
+const highlighter = await createHighlighter({ themes: ['github-light'], langs: ['ts', 'bash'] })
+const syntaxColors = new Map()
 
 const escapeHtml = value => String(value)
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;')
 
+const syntaxClass = color => {
+  const value = color.toLowerCase()
+  if (!syntaxColors.has(value)) syntaxColors.set(value, `syntax-${syntaxColors.size}`)
+  return syntaxColors.get(value)
+}
+
+const highlight = (source, lang) => {
+  const { tokens } = highlighter.codeToTokens(source.trim(), { lang, theme: 'github-light' })
+  const lines = tokens.map(line => `<span class="line">${line.map(token => `<span class="${syntaxClass(token.color ?? '#24292e')}">${escapeHtml(token.content)}</span>`).join('')}</span>`)
+  return `<pre class="shiki" tabindex="0"><code>${lines.join('\n')}</code></pre>`
+}
+
 const code = (source, label = 'TypeScript') => `
   <figure class="code-block">
     <figcaption>${label}</figcaption>
-    <pre><code>${escapeHtml(source.trim())}</code></pre>
+    ${highlight(source, label === 'Terminal' ? 'bash' : 'ts')}
   </figure>`
 
 const docsNav = active => `
   <aside class="docs-nav" aria-label="Documentation">
+    <strong>Documentation</strong>
     <a ${active === 'docs' ? 'aria-current="page"' : ''} href="/docs/">Start</a>
     <a ${active === 'api' ? 'aria-current="page"' : ''} href="/docs/api/">API</a>
     <a ${active === 'zod' ? 'aria-current="page"' : ''} href="/docs/zod/">Zod migration</a>
@@ -37,7 +54,7 @@ const page = ({ title, description, path = '/', active = '', body }) => `<!docty
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="${description}">
-  <meta name="theme-color" content="#fbfcf7">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:type" content="website">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
@@ -46,11 +63,12 @@ const page = ({ title, description, path = '/', active = '', body }) => `<!docty
   <title>${title}</title>
   <link rel="canonical" href="https://litetype.org${path}">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/style.css?v=5">
+  <link rel="stylesheet" href="/highlight.css?v=1">
 </head>
 <body>
   <header class="site-header">
-    <a class="wordmark" href="/" aria-label="litetype home"><span>{</span> litetype <span>}</span></a>
+    <a class="wordmark" href="/" aria-label="litetype home">litetype</a>
     <nav aria-label="Main navigation">
       <a ${active === 'docs' ? 'aria-current="page"' : ''} href="/docs/">Docs</a>
       <a ${active === 'benchmarks' ? 'aria-current="page"' : ''} href="/benchmarks/">Benchmarks</a>
@@ -70,10 +88,12 @@ const home = page({
   title: 'litetype — Runtime schemas that look like TypeScript',
   description: 'A 5 kB runtime validation library where a literal is a schema.',
   body: `
-    <section class="hero">
+    <div class="home-shell">
+    <article class="home-article">
+    <section class="hero" id="overview">
       <div class="hero-copy">
         <p class="eyebrow">Runtime validation, written like TypeScript</p>
-        <h1>A literal is<br><span>already a schema.</span></h1>
+        <h1>A literal is a schema.</h1>
         <p class="lede">No object builder. No method language. Write a value like an interface, infer its type, then validate unknown data.</p>
         <div class="hero-actions">
           <button class="install" data-copy="npm i litetype"><span>$</span> npm i litetype <b>Copy</b></button>
@@ -95,10 +115,10 @@ parse(User, input)</code></pre>
       </div>
     </section>
 
-    <section class="thesis">
+    <section class="thesis" id="model">
       <header>
         <p class="eyebrow">The model</p>
-        <h2>Three things, kept separate.</h2>
+        <h2>Three things, separate</h2>
       </header>
       <div class="model-lines">
         <div><span>value</span><code>const User = { name: string }</code></div>
@@ -107,10 +127,10 @@ parse(User, input)</code></pre>
       </div>
     </section>
 
-    <section class="proof">
+    <section class="proof" id="performance">
       <header>
         <p class="eyebrow">Measured, not claimed</p>
-        <h2>Small enough to disappear.<br>Fast enough to stop thinking about.</h2>
+        <h2>Performance and size</h2>
       </header>
       <dl class="facts">
         <div><dt>5.00 kB</dt><dd>browser bundle, min + gzip</dd></div>
@@ -121,10 +141,10 @@ parse(User, input)</code></pre>
       <a class="text-link" href="/benchmarks/">See contracts and methodology →</a>
     </section>
 
-    <section class="composition">
+    <section class="composition" id="composition">
       <div>
         <p class="eyebrow">Schemas are data</p>
-        <h2>Compose with JavaScript.</h2>
+        <h2>Composition</h2>
         <p>Spread is extend. Property access is pick. Rest destructuring is omit. Optional keys remain optional because the language already knows how objects compose.</p>
       </div>
       ${code(`const User = { name: string, age: number, 'email?': string }
@@ -135,9 +155,9 @@ const Public = { name: User.name, 'email?': User['email?'] }
 const { age: _, ...NoAge } = User`)}
     </section>
 
-    <section class="compare">
+    <section class="compare" id="zod">
       <p class="eyebrow">Less library language</p>
-      <h2>The same job, with the scaffolding removed.</h2>
+      <h2>Compared with Zod</h2>
       <div class="compare-grid">
         ${code(`const User = z.object({
   name: z.string().min(1),
@@ -157,9 +177,9 @@ parse(User, input)`, 'litetype')}
       <a class="text-link" href="/docs/zod/">Move from Zod →</a>
     </section>
 
-    <section class="ecosystem">
+    <section class="ecosystem" id="ecosystem">
       <p class="eyebrow">One standard edge</p>
-      <h2>tRPC, Hono and forms<br>without adapter packages.</h2>
+      <h2>Ecosystem</h2>
       <p>Keep schemas bare inside your code. Wrap once with Standard Schema where another tool needs it.</p>
       ${code(`const User = { name: string.min(1) }
 
@@ -169,10 +189,22 @@ t.procedure
       <a class="text-link" href="/docs/integrations/">Integration recipes →</a>
     </section>
 
-    <section class="closing">
-      <h2>Keep the type.<br>Drop the ceremony.</h2>
+    <section class="closing" id="install">
+      <h2>Install</h2>
       <button class="install inverse" data-copy="npm i litetype"><span>$</span> npm i litetype <b>Copy</b></button>
-    </section>`
+    </section>
+    </article>
+    <aside class="home-toc" aria-label="On this page">
+      <strong>On this page</strong>
+      <a aria-current="true" href="#overview">Overview</a>
+      <a href="#model">Three things</a>
+      <a href="#performance">Performance</a>
+      <a href="#composition">Composition</a>
+      <a href="#zod">Compared with Zod</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="#install">Install</a>
+    </aside>
+    </div>`
 })
 
 const start = page({
@@ -414,6 +446,7 @@ for (const [route, html] of routes) {
 }
 
 await cp(join(root, 'style.css'), join(out, 'style.css'))
+await writeFile(join(out, 'highlight.css'), [...syntaxColors].map(([color, className]) => `.${className}{color:${color}}`).join('\n'))
 await cp(join(root, 'site.js'), join(out, 'site.js'))
 await cp(join(root, 'icon.svg'), join(out, 'icon.svg'))
 await cp(join(root, 'social.svg'), join(out, 'social.svg'))
