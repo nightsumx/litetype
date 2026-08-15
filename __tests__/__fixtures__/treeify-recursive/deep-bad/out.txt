@@ -1,0 +1,35 @@
+{
+  "errors": [],
+  "properties": {
+    "kids": {
+      "errors": [],
+      "items": [
+        {
+          "errors": [],
+          "properties": {
+            "name": {
+              "errors": [
+                "length must be >= 1"
+              ]
+            },
+            "kids": {
+              "errors": [],
+              "items": [
+                {
+                  "errors": [],
+                  "properties": {
+                    "name": {
+                      "errors": [
+                        "length must be >= 1"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

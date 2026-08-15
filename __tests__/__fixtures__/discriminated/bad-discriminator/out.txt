@@ -1,0 +1,2 @@
+FAIL
+type: invalid discriminator value "triangle" [invalid_value]

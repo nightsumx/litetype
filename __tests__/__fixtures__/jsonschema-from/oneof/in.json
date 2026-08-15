@@ -1,0 +1,1 @@
+{"doc":{"oneOf":[{"type":"object","properties":{"t":{"const":"a"},"x":{"type":"number"}},"required":["t","x"]},{"type":"object","properties":{"t":{"const":"b"},"y":{"type":"string"}},"required":["t","y"]}]},"data":{"t":"a","x":1}}

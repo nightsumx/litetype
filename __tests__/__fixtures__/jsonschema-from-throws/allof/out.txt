@@ -1,0 +1,1 @@
+[jsonschema] unsupported: allOf (交集无对应节点)

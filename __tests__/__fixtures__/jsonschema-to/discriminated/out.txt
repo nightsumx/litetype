@@ -1,0 +1,1 @@
+{"oneOf":[{"type":"object","properties":{"type":{"const":"a"},"x":{"type":"number"}},"required":["type","x"]},{"type":"object","properties":{"type":{"const":"b"},"y":{"type":"string"}},"required":["type","y"]}]}

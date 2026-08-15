@@ -1,0 +1,4 @@
+FAIL
+<root>: no union member matched [invalid_union]
+  member 0 @ ·: expected literal "a", got "c"
+  member 1 @ ·: expected literal "b", got "c"

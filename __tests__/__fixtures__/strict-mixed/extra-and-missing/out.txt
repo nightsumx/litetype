@@ -1,0 +1,3 @@
+FAIL
+junk: unexpected key [unrecognized_key]
+name: missing required key [invalid_type]

@@ -1,0 +1,2 @@
+FAIL
+<root>: 太短了 [too_small]

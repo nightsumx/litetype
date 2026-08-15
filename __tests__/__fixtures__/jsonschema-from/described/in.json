@@ -1,0 +1,1 @@
+{"doc":{"type":"object","properties":{"q":{"type":"string","description":"the query"}},"required":["q"]},"data":{"q":"hi"}}

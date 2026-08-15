@@ -1,0 +1,1 @@
+OK {"kind":"square","side":2}

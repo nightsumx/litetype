@@ -1,0 +1,4 @@
+FAIL
+age: must be >= 0 [too_small]
+bio: length must be <= 5 [too_big]
+name: length must be >= 1 [too_small]

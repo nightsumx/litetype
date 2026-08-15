@@ -1,0 +1,10 @@
+✖ length must be >= 1
+  → at id
+✖ must be >= 1
+  → at qty
+✖ length must be >= 1
+  → at items.1.sku
+✖ must be >= 0
+  → at items.1.price
+✖ length must be <= 10
+  → at note

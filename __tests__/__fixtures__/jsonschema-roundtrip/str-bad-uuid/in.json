@@ -1,0 +1,1 @@
+{"schema":"string-constraints","data":{"id":"not-a-uuid","name":"ok","site":"https://x.io","when":"2020-01-01T00:00:00Z","code":"abc"}}

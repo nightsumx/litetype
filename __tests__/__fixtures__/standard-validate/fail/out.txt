@@ -1,0 +1,4 @@
+v1 litetype
+ISSUES
+age: must be >= 0
+name: length must be >= 1

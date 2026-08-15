@@ -1,0 +1,5 @@
+FAIL
+<root>: no union member matched [invalid_union]
+  member 0 @ kind: expected literal "circle", got "triangle"
+  member 1 @ kind: expected literal "square", got "triangle"
+  member 1 @ side: missing required key

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"string"},"nick":{"type":"string"},"age":{"type":"number"},"tags":{"type":"array","items":{"type":"string"}},"kind":{"const":"user"}},"required":["id","age","tags","kind"]}

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"flag":{"type":"boolean"},"when":{"type":["number","null"]}},"required":["flag","when"]}

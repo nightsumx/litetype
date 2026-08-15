@@ -1,0 +1,1 @@
+OK {"type":"square","side":3}

@@ -1,0 +1,2 @@
+FAIL
+self: expected number, got object [invalid_type]

@@ -1,0 +1,1 @@
+[jsonschema] unsupported: properties + additionalProperties schema (无 catchall 节点)

@@ -1,0 +1,3 @@
+FAIL
+<root>: must be <= 10 [too_big]
+<root>: must be a multiple of 2 [not_multiple_of]

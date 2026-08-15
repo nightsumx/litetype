@@ -1,0 +1,1 @@
+[schema] discriminatedUnion: member missing literal at discriminator key "type"

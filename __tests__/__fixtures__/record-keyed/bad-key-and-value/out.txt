@@ -1,0 +1,3 @@
+FAIL
+guest: expected number, got string [invalid_type]
+guest: expected one of ["admin", "user"], got "guest" [invalid_value]

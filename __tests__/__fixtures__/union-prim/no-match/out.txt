@@ -1,0 +1,4 @@
+FAIL
+<root>: no union member matched [invalid_union]
+  member 0 @ ·: expected string, got boolean
+  member 1 @ ·: expected number, got boolean

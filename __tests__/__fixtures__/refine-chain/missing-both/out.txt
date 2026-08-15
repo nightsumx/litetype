@@ -1,0 +1,3 @@
+FAIL
+<root>: need a digit [custom]
+<root>: need an uppercase [custom]

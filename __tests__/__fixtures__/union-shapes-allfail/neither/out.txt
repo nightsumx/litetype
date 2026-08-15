@@ -1,0 +1,6 @@
+FAIL
+<root>: no union member matched [invalid_union]
+  member 0 @ kind: expected literal "a", got "c"
+  member 0 @ x: missing required key
+  member 1 @ kind: expected literal "b", got "c"
+  member 1 @ y: missing required key

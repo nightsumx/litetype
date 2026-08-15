@@ -1,0 +1,1 @@
+{"doc":{"type":"object","properties":{"a":{"type":"string"}},"required":["a"],"additionalProperties":false},"data":{"a":"x","b":"extra"}}

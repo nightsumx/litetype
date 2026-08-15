@@ -1,0 +1,2 @@
+FAIL
+<root>: expected one of ["admin", "user"], got "root" [invalid_value]

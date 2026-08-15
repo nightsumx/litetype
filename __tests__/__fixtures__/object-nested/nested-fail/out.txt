@@ -1,0 +1,4 @@
+FAIL
+lead.name: missing required key [invalid_type]
+lead.nick: expected string, got number [invalid_type]
+size: expected number, got string [invalid_type]

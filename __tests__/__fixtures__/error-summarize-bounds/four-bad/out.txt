@@ -1,0 +1,1 @@
+4 issues -> 4 issue(s): a: expected string, got number; b: expected string, got number; c: expected string, got number (+1 more)

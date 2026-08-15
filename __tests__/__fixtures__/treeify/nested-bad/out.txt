@@ -1,0 +1,41 @@
+{
+  "errors": [],
+  "properties": {
+    "id": {
+      "errors": [
+        "length must be >= 1"
+      ]
+    },
+    "qty": {
+      "errors": [
+        "must be >= 1"
+      ]
+    },
+    "items": {
+      "errors": [],
+      "items": [
+        null,
+        {
+          "errors": [],
+          "properties": {
+            "sku": {
+              "errors": [
+                "length must be >= 1"
+              ]
+            },
+            "price": {
+              "errors": [
+                "must be >= 0"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "note": {
+      "errors": [
+        "length must be <= 10"
+      ]
+    }
+  }
+}

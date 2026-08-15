@@ -1,0 +1,3 @@
+FAIL
+__proto__: expected number, got object [invalid_type]
+prototype-clean: true
