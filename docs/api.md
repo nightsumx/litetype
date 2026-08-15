@@ -23,18 +23,24 @@ import { fromJsonSchema, toJsonSchema } from 'litetype/jsonschema'
 | `parse(s, data)` | ok → `Infer<S>`; fail → throw `SchemaError` |
 | `safeParse(s, data)` | `{ success, data }` / `{ success, error }` |
 | `check(s, data)` | type guard |
+| `compile(s)` | cached type guard for a hot loop |
 
 Failure collects the whole tree. Each issue is `{ path, message, code }`.
 
 ```ts
-import { string, parse, safeParse, check } from 'litetype'
+import { string, parse, safeParse, check, compile } from 'litetype'
 
 const Name = { name: string.min(1) }
 
 parse(Name, { name: 'Ann' })
 const r = safeParse(Name, { name: '' })
 if (check(Name, input)) input.name
+const allowsName = compile(Name)
+if (allowsName(input)) input.name
 ```
+
+All verbs compile a schema on first use. `compile` returns that same predicate so repeated
+validation pays no schema-cache lookup. It reports only true/false; use `safeParse` for issues.
 
 ## Types
 

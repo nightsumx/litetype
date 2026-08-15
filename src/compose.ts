@@ -1,8 +1,8 @@
-import type { ArraySchema, CatchSchema, DescribedSchema, DiscriminatedUnionSchema, Infer, InferInput, LazySchema, PreprocessSchema, RecordSchema, RefinedSchema, Schema, Shape, StrictSchema, StripSchema, TupleSchema, TYPE, TransformSchema, UnionSchema } from './types'
+import type { ArraySchema, CatchSchema, DescribedSchema, DiscriminatedUnionSchema, Infer, InferInput, LazySchema, PreprocessSchema, RecordSchema, RefinedSchema, SchemaValue, Shape, StrictSchema, StripSchema, TupleSchema, TYPE, TransformSchema, UnionSchema } from './types'
 import { boolean, date, number, string } from './leaf'
 import { isSchema, KIND, node } from './node'
 
-type Spec = Schema<any> | Shape
+type Spec = SchemaValue<any, any> | Shape
 
 export function fallback<S extends Spec>(schema: S, value: Infer<S>): CatchSchema<S> {
     return node({ [KIND]: 'catch', inner: schema, value })
@@ -92,16 +92,16 @@ function coerceValue(target: 'number' | 'boolean' | 'date' | 'string', v: unknow
 }
 
 export const coerce = {
-    number: (inner: Schema<number> = number) => node<PreprocessSchema<Schema<number>>>(
+    number: (inner: SchemaValue<number> = number) => node<PreprocessSchema<SchemaValue<number>>>(
         { [KIND]: 'preprocess', inner, fn: (v: unknown) => coerceValue('number', v) },
     ),
-    boolean: (inner: Schema<boolean> = boolean) => node<PreprocessSchema<Schema<boolean>>>(
+    boolean: (inner: SchemaValue<boolean> = boolean) => node<PreprocessSchema<SchemaValue<boolean>>>(
         { [KIND]: 'preprocess', inner, fn: (v: unknown) => coerceValue('boolean', v) },
     ),
-    date: (inner: Schema<Date> = date) => node<PreprocessSchema<Schema<Date>>>(
+    date: (inner: SchemaValue<Date> = date) => node<PreprocessSchema<SchemaValue<Date>>>(
         { [KIND]: 'preprocess', inner, fn: (v: unknown) => coerceValue('date', v) },
     ),
-    string: (inner: Schema<string> = string) => node<PreprocessSchema<Schema<string>>>(
+    string: (inner: SchemaValue<string> = string) => node<PreprocessSchema<SchemaValue<string>>>(
         { [KIND]: 'preprocess', inner, fn: (v: unknown) => coerceValue('string', v) },
     ),
 }

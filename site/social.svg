@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f5f8fd"/>
+  <path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200M150 0v630M300 0v630M450 0v630M600 0v630M750 0v630M900 0v630M1050 0v630" stroke="#dce4ef"/>
+  <text x="90" y="155" fill="#2d5bff" font-family="ui-monospace, monospace" font-size="34">{ litetype }</text>
+  <text x="90" y="310" fill="#111c2e" font-family="system-ui, sans-serif" font-weight="700" font-size="82">A literal is a schema.</text>
+  <text x="90" y="410" fill="#5d6a7e" font-family="system-ui, sans-serif" font-size="34">Runtime validation that looks like TypeScript.</text>
+  <rect x="90" y="490" width="300" height="64" rx="9" fill="#111c2e"/>
+  <text x="120" y="534" fill="#f5f8fd" font-family="ui-monospace, monospace" font-size="27">npm i litetype</text>
+</svg>

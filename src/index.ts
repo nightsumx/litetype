@@ -1,6 +1,6 @@
 export { array, coerce, describe, descriptionOf, discriminatedUnion, fallback, lazy, partial, preprocess, record, refine, required, strict, strip, transform, tuple, union } from './compose'
 export { type ErrorTree, type FlatErrors, flatten, type Issue, type IssueCode, prettify, type SafeParseResult, SchemaError, treeify } from './error'
 export { boolean, date, enum_, literal, number, string, unknown } from './leaf'
-export { check, parse, safeParse } from './parse'
+export { check, compile, parse, safeParse } from './parse'
 export { standard, type StandardSchemaV1 } from './standard'
-export type { Infer, InferInput, Schema, Shape } from './types'
+export type { Infer, InferInput, Schema, SchemaValue, Shape } from './types'

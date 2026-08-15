@@ -14,6 +14,7 @@ import { strict } from '../src/compose'
 import { string } from '../src/leaf'
 import { refine, transform } from '../src/compose'
 import { standard } from '../src/standard'
+import { compile } from '../src/parse'
 
 // --- 断言工具 ---
 type Expect<T extends true> = T
@@ -51,6 +52,11 @@ type _NotFakeOptional = Expect<Equal<
 type U = Infer<typeof User>
 const _omit: U = { name: 'a', age: 1 }
 const _full: U = { name: 'a', age: 1, email: 'x@y.z', verified: true }
+declare let _candidate: unknown
+if (compile(User)(_candidate)) {
+    const _narrowed: U = _candidate
+    void _narrowed
+}
 // @ts-expect-error name 必填，省略报错
 const _missing: U = { age: 1 }
 

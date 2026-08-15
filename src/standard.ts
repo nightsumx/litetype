@@ -1,4 +1,4 @@
-import type { Infer, InferInput, Schema, Shape } from './types'
+import type { Infer, InferInput, SchemaValue, Shape } from './types'
 import { run } from './parse'
 
 export interface StandardSchemaV1<Input = unknown, Output = Input> {
@@ -23,7 +23,7 @@ const STD = '~standard'
 
 type Standardized<S> = S & StandardSchemaV1<InferInput<S>, Infer<S>>
 
-export function standard<S extends Schema<any> | Shape>(schema: S): Standardized<S> {
+export function standard<S extends SchemaValue<any, any> | Shape>(schema: S): Standardized<S> {
     if (typeof schema === 'object' && schema !== null && STD in schema)
         return schema as Standardized<S>
 

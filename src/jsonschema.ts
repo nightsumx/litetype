@@ -1,5 +1,5 @@
-import type { Schema, Shape } from './types'
-import { array, describe, lazy, record, strict, tuple, union } from './compose'
+import type { SchemaValue, Shape } from './types'
+import { array, describe, lazy, record, refine, strict, tuple, union } from './compose'
 import { boolean, enum_, literal, number, string as str, unknown } from './leaf'
 import { isSchema, KIND, node } from './node'
 
@@ -33,11 +33,11 @@ export interface JsonSchema {
     patternProperties?: unknown
 }
 
-export function fromJsonSchema(doc: JsonSchema): Schema<unknown> | Shape {
-    return convert(doc, doc.$defs ?? doc.definitions ?? {}) as Schema<unknown> | Shape
+export function fromJsonSchema(doc: JsonSchema): SchemaValue<unknown> | Shape {
+    return convert(doc, doc.$defs ?? doc.definitions ?? {})
 }
 
-function convert(s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any> | Shape {
+function convert(s: JsonSchema, defs: Record<string, JsonSchema>): SchemaValue<any, any> | Shape {
     if (s.allOf !== undefined)
         throw new Error('[jsonschema] unsupported: allOf (交集无对应节点)')
     if (s.if !== undefined)
@@ -63,14 +63,14 @@ function convert(s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any> |
     const type = Array.isArray(s.type) ? s.type.find(t => t !== 'null') : s.type
     const built = byType(type, s, defs)
     const wrapped = nullable && isSchema(built)
-        ? node<Schema<any>>({ [KIND]: 'nullable', inner: built })
+        ? node<SchemaValue<any, any>>({ [KIND]: 'nullable', inner: built })
         : built
     if (s.description !== undefined && isSchema(wrapped))
         return describe(wrapped, s.description)
     return wrapped
 }
 
-function byType(type: string | undefined, s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any> | Shape {
+function byType(type: string | undefined, s: JsonSchema, defs: Record<string, JsonSchema>): SchemaValue<any, any> | Shape {
     switch (type) {
         case 'string': return stringFrom(s)
         case 'integer': return numberFrom(s, true)
@@ -82,7 +82,7 @@ function byType(type: string | undefined, s: JsonSchema, defs: Record<string, Js
     }
 }
 
-function stringFrom(s: JsonSchema): Schema<any> {
+function stringFrom(s: JsonSchema): SchemaValue<string> {
     let out = str
     if (s.minLength !== undefined)
         out = out.min(s.minLength)
@@ -101,7 +101,7 @@ function stringFrom(s: JsonSchema): Schema<any> {
     return out
 }
 
-function numberFrom(s: JsonSchema, int: boolean): Schema<any> {
+function numberFrom(s: JsonSchema, int: boolean): SchemaValue<number> {
     let out = number
     if (int)
         out = out.int()
@@ -118,20 +118,20 @@ function numberFrom(s: JsonSchema, int: boolean): Schema<any> {
     return out
 }
 
-function arrayFrom(s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any> {
+function arrayFrom(s: JsonSchema, defs: Record<string, JsonSchema>): SchemaValue<any, any> {
     if (Array.isArray(s.items))
         return tuple(...s.items.map(i => convert(i, defs)))
-    let out: Schema<any> = array(s.items ? convert(s.items, defs) : unknown)
+    let out: SchemaValue<any, any> = array(s.items ? convert(s.items, defs) : unknown)
     const lo = s.minItems
     const hi = s.maxItems
     if (lo !== undefined)
-        out = out.refine(v => Array.isArray(v) && v.length >= lo, `must have at least ${lo} items`)
+        out = refine(out, v => Array.isArray(v) && v.length >= lo, `must have at least ${lo} items`)
     if (hi !== undefined)
-        out = out.refine(v => Array.isArray(v) && v.length <= hi, `must have at most ${hi} items`)
+        out = refine(out, v => Array.isArray(v) && v.length <= hi, `must have at most ${hi} items`)
     return out
 }
 
-function objectFrom(s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any> | Shape {
+function objectFrom(s: JsonSchema, defs: Record<string, JsonSchema>): SchemaValue<any, any> | Shape {
     const hasProps = s.properties && Object.keys(s.properties).length > 0
     const apObject = s.additionalProperties && typeof s.additionalProperties === 'object'
     if (hasProps && apObject)
@@ -139,7 +139,7 @@ function objectFrom(s: JsonSchema, defs: Record<string, JsonSchema>): Schema<any
     if (apObject)
         return record(convert(s.additionalProperties as JsonSchema, defs))
     const required = new Set(s.required ?? [])
-    const shape: Record<string, Schema<any> | Shape> = {}
+    const shape: Record<string, SchemaValue<any, any> | Shape> = {}
     for (const [key, prop] of Object.entries(s.properties ?? {})) {
         if (required.has(key) && key.endsWith('?'))
             throw new Error(`[jsonschema] unsupported required property ending in ?: ${JSON.stringify(key)}`)
@@ -153,7 +153,7 @@ function refName(ref: string): string {
     return parts[parts.length - 1]
 }
 
-export function toJsonSchema(schema: Schema<unknown> | Shape): JsonSchema {
+export function toJsonSchema(schema: SchemaValue<unknown, unknown> | Shape): JsonSchema {
     return serialize(schema)
 }
 

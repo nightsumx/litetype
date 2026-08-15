@@ -3,9 +3,12 @@ export declare const TYPE: unique symbol
 export declare const INPUT: unique symbol
 declare const DEFAULTED: unique symbol
 
-export interface Schema<Output, Input = Output> {
+export interface SchemaValue<Output = unknown, Input = Output> {
     readonly [TYPE]: Output
     readonly [INPUT]: Input
+}
+
+export interface Schema<Output, Input = Output> extends SchemaValue<Output, Input> {
     transform: <O>(fn: (value: Output) => O) => TransformSchema<this, O, Input>
     refine: (pred: (value: Output) => boolean, message: string) => this
     default: (value: Output) => DefaultSchema<this>
@@ -14,17 +17,17 @@ export interface Schema<Output, Input = Output> {
     nullish: () => NullishSchema<this>
 }
 
-export interface Shape { [k: string]: Schema<any> | Shape }
+export interface Shape { [k: string]: SchemaValue<any, any> | Shape }
 
 export type Infer<S> =
-    S extends { readonly [TYPE]: infer T } ? T :
-        S extends Shape ? InferObject<S> :
-            never
+    S extends object ?
+        typeof TYPE extends keyof S ? S[typeof TYPE] : InferObject<S>
+        : never
 
 export type InferInput<S> =
-    S extends { readonly [INPUT]: infer I } ? I :
-        S extends Shape ? InferInputObject<S> :
-            never
+    S extends object ?
+        typeof INPUT extends keyof S ? S[typeof INPUT] : InferInputObject<S>
+        : never
 
 type StripQ<K> = K extends `${infer N}?` ? N : K
 type Prettify<T> = { [K in keyof T]: T[K] } & {}

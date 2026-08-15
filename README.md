@@ -47,7 +47,7 @@ const { age: _, ...NoAge } = User
 ## Check
 
 ```ts
-import { string, parse, safeParse, check, flatten } from 'litetype'
+import { string, parse, safeParse, check, compile, flatten } from 'litetype'
 
 const User = { name: string.min(1) }
 const input: unknown = { name: 'Ann' }
@@ -56,10 +56,15 @@ parse(User, input)                 // { name: 'Ann' }
 const r = safeParse(User, input)   // { success, data } | { success, error }
 if (check(User, input)) input.name
 
+const allowsUser = compile(User)   // cache once for a hot loop
+if (allowsUser(input)) input.name
+
 if (!r.success) flatten(r.error)   // { formErrors, fieldErrors }
 ```
 
 `parse` collects every issue in the tree. Each one is `{ path, message, code }`.
+Schemas compile automatically on first use. `compile(schema)` only exposes the cached
+type predicate when a hot loop should avoid the schema lookup on every call.
 
 Extra keys pass through (same object, no copy). Drop them with `strip`, reject them with `strict`:
 
@@ -102,7 +107,8 @@ JSON Schema is a subpath — it does not land in the main import:
 import { fromJsonSchema, toJsonSchema } from 'litetype/jsonschema'
 ```
 
-Dictionary: [docs/api.md](https://github.com/nightsumx/litetype/blob/main/docs/api.md). Coming from Zod: [docs/zod.md](https://github.com/nightsumx/litetype/blob/main/docs/zod.md).
+Dictionary: [litetype.org/docs/api](https://litetype.org/docs/api/). Coming from Zod: [litetype.org/docs/zod](https://litetype.org/docs/zod/).
+Measured against Zod, AJV, and ArkType: [litetype.org/benchmarks](https://litetype.org/benchmarks/).
 
 ## Ecosystem
 
@@ -170,5 +176,7 @@ app.post('/users', sValidator('json', User), c =>
 - `toJsonSchema` will not serialize `transform` / `refine` / `preprocess`.
 - `number` accepts `Infinity`. Exclude it with `.finite()`.
 - `coerce.boolean` only accepts `'true'` / `'false'`.
+- A strict CSP that blocks dynamic code generation falls back to the interpreter; behavior is
+  unchanged, but compiled-path throughput is unavailable.
 
 Zero runtime dependencies. MIT.

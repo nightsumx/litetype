@@ -1,6 +1,6 @@
 {
   "name": "litetype",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Runtime schemas that look like TypeScript and compose like JavaScript",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -43,6 +43,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && tsup",
+    "site:build": "node site/build.mjs",
+    "bench": "bun run build && node bench/bench.mjs",
+    "bench:size": "node bench/size.mjs",
+    "perf:type": "node bench/type-budget.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "bun run build"
@@ -50,9 +54,11 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^3.1.2",
+    "ajv": "^8.20.0",
+    "arktype": "^2.2.3",
+    "esbuild": "^0.27.0",
     "tsup": "^8.4.0",
     "typescript": "~5.7.2",
-    "valibot": "^1.4.1",
     "vitest": "^3.1.2",
     "zod": "^4.4.3"
   },
@@ -69,6 +75,6 @@
     "type": "git",
     "url": "git+https://github.com/nightsumx/litetype.git"
   },
-  "homepage": "https://github.com/nightsumx/litetype#readme",
+  "homepage": "https://litetype.org",
   "bugs": "https://github.com/nightsumx/litetype/issues"
 }
