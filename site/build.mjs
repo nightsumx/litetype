@@ -46,7 +46,7 @@ const page = ({ title, description, path = '/', active = '', body }) => `<!docty
   <title>${title}</title>
   <link rel="canonical" href="https://litetype.org${path}">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="/style.css?v=3">
 </head>
 <body>
   <header class="site-header">
