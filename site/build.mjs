@@ -37,7 +37,7 @@ const page = ({ title, description, path = '/', active = '', body }) => `<!docty
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="${description}">
-  <meta name="theme-color" content="#f5f8fd">
+  <meta name="theme-color" content="#fbfcf7">
   <meta property="og:type" content="website">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
@@ -46,7 +46,7 @@ const page = ({ title, description, path = '/', active = '', body }) => `<!docty
   <title>${title}</title>
   <link rel="canonical" href="https://litetype.org${path}">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css?v=2">
 </head>
 <body>
   <header class="site-header">
@@ -73,7 +73,7 @@ const home = page({
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Runtime validation, written like TypeScript</p>
-        <h1>A literal is<br>a schema.</h1>
+        <h1>A literal is<br><span>already a schema.</span></h1>
         <p class="lede">No object builder. No method language. Write a value like an interface, infer its type, then validate unknown data.</p>
         <div class="hero-actions">
           <button class="install" data-copy="npm i litetype"><span>$</span> npm i litetype <b>Copy</b></button>
